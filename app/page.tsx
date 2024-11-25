@@ -1,39 +1,39 @@
 import { Link } from "@nextui-org/link";
 import { Snippet } from "@nextui-org/snippet";
-import { Code } from "@nextui-org/code";
 import { button as buttonStyles } from "@nextui-org/theme";
 
 import { siteConfig } from "@/config/site";
-import { title, subtitle } from "@/components/primitives";
 import { GithubIcon } from "@/components/icons";
+import { Input } from "@nextui-org/input";
+import { Button } from "@nextui-org/button";
 
 export default function Home() {
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-      <div className="inline-block max-w-xl text-center justify-center">
-        <span className={title()}>Make&nbsp;</span>
-        <span className={title({ color: "violet" })}>beautiful&nbsp;</span>
-        <br />
-        <span className={title()}>
-          websites regardless of your design experience.
-        </span>
-        <div className={subtitle({ class: "mt-4" })}>
-          Beautiful, fast and modern React UI library.
-        </div>
+      <div className="text-center max-w-xl">
+        <h1 className="text-3xl font-bold mb-2">Subscribe to Northern Lights Updates</h1>
+        <p className="text-lg">
+          Never miss a magical moment! Get notified when the weather is perfect for spotting the Northern Lights in Finland—straight to your inbox.
+        </p>
       </div>
-
-      <div className="flex gap-3">
-        <Link
-          isExternal
-          className={buttonStyles({
-            color: "primary",
-            radius: "full",
-            variant: "shadow",
-          })}
-          href={siteConfig.links.docs}
+      <div className="flex flex-col md:flex-row items-center gap-4 w-full max-w-md">
+        <Input
+          fullWidth
+          placeholder="Enter your email address"
+          className="bg-white text-black"
+          type="email"
+        />
+        <Button
+          className={buttonStyles({ variant: "solid", radius: "full", size: "lg" })}
         >
-          Documentation
-        </Link>
+          Subscribe
+        </Button>
+      </div>
+      <div className="mt-6 text-center">
+        <Snippet hideCopyButton hideSymbol variant="bordered" className="text-sm">
+          <span>We respect your privacy. Unsubscribe anytime.</span>
+        </Snippet>
+        <br /><br />
         <Link
           isExternal
           className={buttonStyles({ variant: "bordered", radius: "full" })}
@@ -42,14 +42,6 @@ export default function Home() {
           <GithubIcon size={20} />
           GitHub
         </Link>
-      </div>
-
-      <div className="mt-8">
-        <Snippet hideCopyButton hideSymbol variant="bordered">
-          <span>
-            Get started by editing <Code color="primary">app/page.tsx</Code>
-          </span>
-        </Snippet>
       </div>
     </section>
   );
