@@ -2,7 +2,6 @@ import nodemailer from 'nodemailer';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
-
     try {
         // Set up the transporter for sending email via Gmail
         const transporter = nodemailer.createTransport({

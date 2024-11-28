@@ -1,13 +1,39 @@
+'use client'
 import { Link } from "@nextui-org/link";
 import { Snippet } from "@nextui-org/snippet";
 import { button as buttonStyles } from "@nextui-org/theme";
 
 import { siteConfig } from "@/config/site";
+import usePost from './hooks/usePost';
 import { GithubIcon } from "@/components/icons";
 import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
+import { useState } from "react";
+
+interface SubscribeResponse {
+  email: string[];
+}
 
 export default function Home() {
+  const [email, setEmail] = useState<string>("");
+  const [{ data, isLoading, error }, subscribeRequest] = usePost<SubscribeResponse>('/api/subscribe');
+
+  const handleSubscribe = async () => {
+
+    if (!email || !email.includes("@")) {
+      console.error("Invalid email address.");
+      return;
+    }
+
+    try {
+      await subscribeRequest({ email });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  console.log(data);
+
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
       <div className="text-center max-w-xl">
@@ -22,13 +48,20 @@ export default function Home() {
           placeholder="Enter your email address"
           className="bg-white text-black"
           type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <Button
+          onClick={handleSubscribe}
           className={buttonStyles({ variant: "solid", radius: "full", size: "lg" })}
+          disabled={isLoading}
         >
-          Subscribe
+          {isLoading ? "Subscribing..." : "Subscribe"}
         </Button>
       </div>
+
+      {error && <p className="text-red-500 mt-4">{error}</p>}
+
       <div className="mt-6 text-center">
         <Snippet hideCopyButton hideSymbol variant="bordered" className="text-sm">
           <span>We respect your privacy. Unsubscribe anytime.</span>
