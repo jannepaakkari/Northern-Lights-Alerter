@@ -3,13 +3,18 @@ import clientPromise from '../../../lib/mongodb';
 
 interface RequestBody {
     email: string;
+    selectedStation: string;
 }
 
 export async function POST(req: NextRequest, res: NextResponse) {
     if (req.method === 'POST') {
-        const { email }: RequestBody = await req.json();
+        const { email, selectedStation }: RequestBody = await req.json();
 
         if (!email || !email.includes('@')) {
+            return NextResponse.json(400);
+        }
+
+        if (!selectedStation) {
             return NextResponse.json(400);
         }
 
@@ -18,6 +23,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
             const db = client.db();
             const collection = db.collection('emails');
             const result = await collection.insertOne({
+                selectedStation,
                 email,
                 timestamp: new Date(),
             });

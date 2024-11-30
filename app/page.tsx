@@ -7,20 +7,26 @@ import { Button } from "@nextui-org/button";
 import { useState } from "react";
 import { SubscribeResponse } from './interfaces/subscribe';
 import { WeatherResponse, WeatherData } from './interfaces/weather';
+import { Select, SelectItem } from "@nextui-org/react";
 import WeatherTable from './components/weatherTable';
 
 export default function Home() {
   const [email, setEmail] = useState<string>("");
+  const [selectedStation, setSelectedStation] = useState<string | null>(null);
   const [{ data: subscribeData, isLoading: isLoadingSubscribe, error: subscribeError }, subscribeRequest] = usePost<SubscribeResponse>('/api/subscribe');
   const [{ data: weatherData, isLoading: isWeatherLoading, error: weatherError }] = useGet<WeatherResponse>('/api/weather', true);
 
   const handleSubscribe = async () => {
+    if (!selectedStation) {
+      console.error("Invalid Station Key.");
+      return;
+    }
     if (!email || !email.includes("@")) {
       console.error("Invalid email address.");
       return;
     }
     try {
-      await subscribeRequest({ email });
+      await subscribeRequest({ email, selectedStation });
     } catch (error) {
       console.error(error);
     }
@@ -31,6 +37,8 @@ export default function Home() {
   const parsedWeatherData: WeatherData | null = (weatherData?.data && typeof weatherData.data === 'object' && !Array.isArray(weatherData.data))
     ? weatherData.data as WeatherData
     : null;
+
+  const weatherDataKeys = parsedWeatherData && Object.keys(parsedWeatherData);
 
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
@@ -47,6 +55,19 @@ export default function Home() {
       }
 
       <div className="flex flex-col md:flex-row items-center gap-4 w-full max-w-md">
+        <Select
+          label="Select a station key"
+          placeholder="Key"
+          className="max-w-xs"
+          onChange={(e) => setSelectedStation(e.target.value)}
+        >
+          {weatherDataKeys ? weatherDataKeys.map((data) => (
+            <SelectItem key={data}>
+              {data}
+            </SelectItem>
+          )) : []}
+        </Select>
+
         <Input
           fullWidth
           placeholder="Enter your email address"
@@ -58,7 +79,7 @@ export default function Home() {
         <Button
           onClick={handleSubscribe}
           className={buttonStyles({ variant: "solid", radius: "full", size: "lg" })}
-          disabled={isWeatherLoading || isLoadingSubscribe}
+          disabled={isWeatherLoading || isLoadingSubscribe || !selectedStation || !email}
         >
           {isLoadingSubscribe ? "Subscribing..." : "Subscribe"}
         </Button>

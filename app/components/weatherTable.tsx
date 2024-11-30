@@ -1,9 +1,8 @@
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/react";
-import { SpaceWeatherData, WeatherData } from '../interfaces/weather';
-
+import { WeatherData } from '../interfaces/weather';
 
 const WeatherTable = ({ data }: { data: WeatherData }) => {
-    const columns = ['Time', 'R-index', 'Probability of auroras', 'Station'];
+    const columns = ['Station Key', 'Time', 'R-index', 'Probability of auroras', 'Station'];
 
     return (
         <Table aria-label="Space Weather Table">
@@ -15,11 +14,11 @@ const WeatherTable = ({ data }: { data: WeatherData }) => {
             <TableBody>
                 {Object.entries(data).map(([stationKey, stationData]) => (
                     <TableRow key={stationKey}>
-                        {columns.map((columnKey) => (
-                            <TableCell key={`${stationKey}-${columnKey}`}>
-                                {stationData[columnKey as keyof SpaceWeatherData]}
-                            </TableCell>
-                        ))}
+                        <TableCell>{stationKey}</TableCell>
+                        <TableCell>{stationData['Time']}</TableCell>
+                        <TableCell>{stationData['R-index']}</TableCell>
+                        <TableCell>{stationData['Probability of auroras']}</TableCell>
+                        <TableCell>{stationData['Station']}</TableCell>
                     </TableRow>
                 ))}
             </TableBody>
