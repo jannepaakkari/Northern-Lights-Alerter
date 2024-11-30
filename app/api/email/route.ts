@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
 
                 // Send an email
                 await transporter.sendMail({
-                    from: `"Aurora Alert" <${process.env.EMAIL_USER}>`,
+                    from: `"Northern Lights Alert" <${process.env.EMAIL_USER}>`,
                     to: `${email}`,
                     subject: 'Northern Lights Alert!',
                     text: 'Conditions are perfect for viewing the northern lights!',

@@ -5,26 +5,24 @@ import { button as buttonStyles } from "@nextui-org/theme";
 
 import { siteConfig } from "@/config/site";
 import usePost from './hooks/usePost';
+import useGet from './hooks/useGet';
 import { GithubIcon } from "@/components/icons";
 import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
 import { useState } from "react";
-
-interface SubscribeResponse {
-  email: string[];
-}
+import { SubscribeResponse } from './interfaces/subscribe';
+import { WeatherResponse } from './interfaces/weather';
 
 export default function Home() {
   const [email, setEmail] = useState<string>("");
-  const [{ data, isLoading, error }, subscribeRequest] = usePost<SubscribeResponse>('/api/subscribe');
+  const [{ data: subscribeData, isLoading: isLoadingSubscribe, error: subscribeError }, subscribeRequest] = usePost<SubscribeResponse>('/api/subscribe');
+  const [{ data: weatherData, isLoading: isWeatherLoading, error: weatherError }] = useGet<WeatherResponse>('/api/weather', true);
 
   const handleSubscribe = async () => {
-
     if (!email || !email.includes("@")) {
       console.error("Invalid email address.");
       return;
     }
-
     try {
       await subscribeRequest({ email });
     } catch (error) {
@@ -32,7 +30,12 @@ export default function Home() {
     }
   };
 
-  console.log(data);
+  const isLoading = isWeatherLoading || isLoadingSubscribe;
+
+  // TODO: Front-end for space weather
+  console.log(weatherData);
+
+  console.log(subscribeData);
 
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
@@ -60,7 +63,8 @@ export default function Home() {
         </Button>
       </div>
 
-      {error && <p className="text-red-500 mt-4">{error}</p>}
+      {subscribeError && <p className="text-red-500 mt-4">{subscribeError}</p>}
+      {weatherError && <p className="text-red-500 mt-4">{weatherError}</p>}
 
       <div className="mt-6 text-center">
         <Snippet hideCopyButton hideSymbol variant="bordered" className="text-sm">
