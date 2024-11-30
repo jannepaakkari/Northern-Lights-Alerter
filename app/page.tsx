@@ -1,17 +1,13 @@
 'use client'
-import { Link } from "@nextui-org/link";
-import { Snippet } from "@nextui-org/snippet";
 import { button as buttonStyles } from "@nextui-org/theme";
-
-import { siteConfig } from "@/config/site";
 import usePost from './hooks/usePost';
 import useGet from './hooks/useGet';
-import { GithubIcon } from "@/components/icons";
 import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
 import { useState } from "react";
 import { SubscribeResponse } from './interfaces/subscribe';
-import { WeatherResponse } from './interfaces/weather';
+import { WeatherResponse, WeatherData } from './interfaces/weather';
+import WeatherTable from './components/weatherTable';
 
 export default function Home() {
   const [email, setEmail] = useState<string>("");
@@ -30,12 +26,11 @@ export default function Home() {
     }
   };
 
-  const isLoading = isWeatherLoading || isLoadingSubscribe;
-
-  // TODO: Front-end for space weather
-  console.log(weatherData);
-
   console.log(subscribeData);
+
+  const parsedWeatherData: WeatherData | null = (weatherData?.data && typeof weatherData.data === 'object' && !Array.isArray(weatherData.data))
+    ? weatherData.data as WeatherData
+    : null;
 
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
@@ -45,6 +40,12 @@ export default function Home() {
           Never miss a magical moment! Get notified when the weather is perfect for spotting the Northern Lights in Finland—straight to your inbox.
         </p>
       </div>
+
+      {isWeatherLoading || !parsedWeatherData
+        ? (<p>Loading...</p>)
+        : <WeatherTable data={parsedWeatherData} />
+      }
+
       <div className="flex flex-col md:flex-row items-center gap-4 w-full max-w-md">
         <Input
           fullWidth
@@ -57,29 +58,14 @@ export default function Home() {
         <Button
           onClick={handleSubscribe}
           className={buttonStyles({ variant: "solid", radius: "full", size: "lg" })}
-          disabled={isLoading}
+          disabled={isWeatherLoading || isLoadingSubscribe}
         >
-          {isLoading ? "Subscribing..." : "Subscribe"}
+          {isLoadingSubscribe ? "Subscribing..." : "Subscribe"}
         </Button>
       </div>
 
       {subscribeError && <p className="text-red-500 mt-4">{subscribeError}</p>}
       {weatherError && <p className="text-red-500 mt-4">{weatherError}</p>}
-
-      <div className="mt-6 text-center">
-        <Snippet hideCopyButton hideSymbol variant="bordered" className="text-sm">
-          <span>We respect your privacy. Unsubscribe anytime.</span>
-        </Snippet>
-        <br /><br />
-        <Link
-          isExternal
-          className={buttonStyles({ variant: "bordered", radius: "full" })}
-          href={siteConfig.links.github}
-        >
-          <GithubIcon size={20} />
-          GitHub
-        </Link>
-      </div>
     </section>
   );
 }
