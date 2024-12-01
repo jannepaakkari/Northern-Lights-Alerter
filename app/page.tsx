@@ -10,11 +10,15 @@ import { WeatherResponse, WeatherData } from './interfaces/weather';
 import { Select, SelectItem } from "@nextui-org/react";
 import WeatherTable from './components/weatherTable';
 
+export interface EmailResponse {
+}
+
 export default function Home() {
   const [email, setEmail] = useState<string>("");
   const [selectedStation, setSelectedStation] = useState<string | null>(null);
   const [{ data: subscribeData, isLoading: isLoadingSubscribe, error: subscribeError }, subscribeRequest] = usePost<SubscribeResponse>('/api/subscribe');
   const [{ data: weatherData, isLoading: isWeatherLoading, error: weatherError }] = useGet<WeatherResponse>('/api/weather', true);
+  const [{ data: emailData, isLoading: isLoadingEmail, error: emailError }, emailRequest] = usePost<EmailResponse>('/api/email');
 
   const handleSubscribe = async () => {
     if (!selectedStation) {
@@ -31,6 +35,16 @@ export default function Home() {
       console.error(error);
     }
   };
+
+  console.log(emailData);
+
+  const handleEmail = async () => {
+    try {
+      await emailRequest({ email: 'd' });
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   console.log(subscribeData);
 
@@ -84,6 +98,13 @@ export default function Home() {
           {isLoadingSubscribe ? "Subscribing..." : "Subscribe"}
         </Button>
       </div>
+
+      <Button
+        onClick={handleEmail}
+        className={buttonStyles({ variant: "solid", radius: "full", size: "lg" })}
+      >
+        emaeaofds
+      </Button>
 
       {subscribeError && <p className="text-red-500 mt-4">{subscribeError}</p>}
       {weatherError && <p className="text-red-500 mt-4">{weatherError}</p>}
