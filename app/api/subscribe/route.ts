@@ -13,7 +13,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
     if (!email || !email.includes('@')) {
         return NextResponse.json({ message: 'Invalid email' }, { status: 400 });
     }
-
     if (!selectedStation) {
         return NextResponse.json({ message: 'Selected station is required' }, { status: 400 });
     }

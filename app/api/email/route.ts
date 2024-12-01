@@ -68,7 +68,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
                     from: `"Northern Lights Alert" <${process.env.EMAIL_USER}>`,
                     to: `${email}`,
                     subject: 'Northern Lights Alert!',
-                    text: 'Conditions are perfect for viewing the northern lights!',
+                    text: 'Conditions are perfect for viewing the northern lights! You can unsubscribe at any time by visiting the website.',
                 });
 
                 // Update the sentAt timestamp for the user
