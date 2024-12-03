@@ -1,5 +1,5 @@
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/react";
-import { WeatherData } from '../interfaces/weather';
+import { WeatherData } from '../../interfaces/weather';
 
 const WeatherTable = ({ data }: { data: WeatherData }) => {
     const columns = ['Station Key', 'Time', 'R-index', 'Probability of auroras', 'Station'];

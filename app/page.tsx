@@ -1,5 +1,4 @@
 'use client'
-import { button as buttonStyles } from "@nextui-org/theme";
 import usePost from './hooks/usePost';
 import useGet from './hooks/useGet';
 import { Input } from "@nextui-org/input";
@@ -8,8 +7,11 @@ import { useState } from "react";
 import { SubscribeResponse } from './interfaces/subscribe';
 import { UnsubscribeResponse } from './interfaces/unsubscribe';
 import { WeatherResponse, WeatherData } from './interfaces/weather';
+import { CircularProgress } from "@nextui-org/react";
 import { Select, SelectItem } from "@nextui-org/react";
-import WeatherTable from './components/weatherTable';
+import WeatherTable from './components/Tables/WeatherTable';
+import { useError } from "./hooks/useError";
+import { useSuccess } from "./hooks/useSuccess";
 
 export default function Home() {
   const [email, setEmail] = useState<string>("");
@@ -17,34 +19,38 @@ export default function Home() {
   const [subscribe, setSubscribe] = useState<boolean>(true);
   const [isInProcessing, setIsInProcessing] = useState<boolean>(false);
   const [{ isLoading: isLoadingSubscribe, error: subscribeError }, subscribeRequest] = usePost<SubscribeResponse>('/api/subscribe');
-  const [{ isLoading: isLoadingunSubscribe }, unsubscribeRequest] = usePost<UnsubscribeResponse>('/api/unsubscribe');
+  const [, unsubscribeRequest] = usePost<UnsubscribeResponse>('/api/unsubscribe');
   const [{ data: weatherData, isLoading: isWeatherLoading, error: weatherError }] = useGet<WeatherResponse>('/api/weather', true);
+  const { setError } = useError();
+  const { setSuccess } = useSuccess();
 
   const handleSubscribe = async () => {
     if (!selectedStation) {
-      console.error("Invalid Station Key.");
+      setError('Error: Please select a station key.');
       return;
     }
     if (!email || !email.includes("@")) {
-      console.error("Invalid email address.");
+      setError('Error: Please enter a valid email address.');
       return;
     }
     try {
       await subscribeRequest({ email, selectedStation });
+      setSuccess('Successfully subscribed!');
     } catch (error) {
-      console.error(error);
+      setError(typeof error === 'string' ? error : 'Error: Something went wrong.');
     }
   };
 
   const handleUnsubscribe = async () => {
     if (!email || !email.includes("@")) {
-      console.error("Invalid email address.");
+      setError('Error: Please enter a valid email address.');
       return;
     }
     try {
       await unsubscribeRequest({ email });
+      setSuccess('Successfully unsubscribed!');
     } catch (error) {
-      console.error(error);
+      setError(typeof error === 'string' ? error : 'Error: Something went wrong.');
     }
   };
 
@@ -63,8 +69,8 @@ export default function Home() {
         </p>
       </div>
       <div className="text-center max-w-xl flex justify-center gap-4">
-        <Button onClick={() => { setSubscribe(true); setIsInProcessing(true); }}>Subscribe</Button>
-        <Button onClick={() => { setSubscribe(false); setIsInProcessing(true); }}>Unsubscribe</Button>
+        <Button color="primary" onClick={() => { setSubscribe(true); setIsInProcessing(true); }}>Subscribe</Button>
+        <Button color="secondary" onClick={() => { setSubscribe(false); setIsInProcessing(true); }}>Unsubscribe</Button>
       </div>
 
       {isInProcessing && (
@@ -94,30 +100,26 @@ export default function Home() {
           />
           {subscribe === true ? (
             <Button
+              color="primary"
               onClick={handleSubscribe}
-              className={buttonStyles({ variant: "solid", radius: "full", size: "lg" })}
-              disabled={isWeatherLoading || isLoadingSubscribe || !selectedStation || !email}
+              disabled={isWeatherLoading || isLoadingSubscribe}
             >
               {isLoadingSubscribe ? "Subscribing..." : "Subscribe"}
             </Button>
           )
             : (
               <Button
+                color="primary"
                 onClick={handleUnsubscribe}
-                className={buttonStyles({ variant: "solid", radius: "full", size: "lg" })}
-                disabled={isWeatherLoading || isLoadingunSubscribe || !email}>Unsubscribe</Button>
+                disabled={isWeatherLoading || isLoadingSubscribe}>Unsubscribe</Button>
             )}
         </div>
       )}
 
       {isWeatherLoading || !parsedWeatherData
-        ? (<p>Loading...</p>)
+        ? (<CircularProgress label="Loading..." />)
         : <WeatherTable data={parsedWeatherData} />
       }
-
-
-      {subscribeError && <p className="text-red-500 mt-4">{subscribeError}</p>}
-      {weatherError && <p className="text-red-500 mt-4">{weatherError}</p>}
     </section>
   );
 }

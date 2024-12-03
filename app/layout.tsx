@@ -11,6 +11,9 @@ import { button as buttonStyles } from "@nextui-org/theme";
 import { GithubIcon } from "@/components/icons";
 import { Link } from "@nextui-org/link";
 
+import { ErrorProvider } from "./providers/ErrorProvider";
+import { SuccessProvider } from "./providers/SuccessProvider";
+
 export const metadata: Metadata = {
   title: {
     default: siteConfig.name,
@@ -46,19 +49,23 @@ export default function RootLayout({
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className="relative flex flex-col h-screen">
             <Navbar />
-            <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
-              {children}
-            </main>
-            <footer className="w-full flex items-center justify-center py-3">
-              <Link
-                isExternal
-                className={buttonStyles({ variant: "bordered", radius: "full" })}
-                href={siteConfig.links.github}
-              >
-                <GithubIcon size={20} />
-                GitHub
-              </Link>
-            </footer>
+            <ErrorProvider>
+              <SuccessProvider>
+                <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
+                  {children}
+                </main>
+                <footer className="w-full flex items-center justify-center py-3">
+                  <Link
+                    isExternal
+                    className={buttonStyles({ variant: "bordered", radius: "full" })}
+                    href={siteConfig.links.github}
+                  >
+                    <GithubIcon size={20} />
+                    GitHub
+                  </Link>
+                </footer>
+              </SuccessProvider>
+            </ErrorProvider>
           </div>
         </Providers>
       </body>
