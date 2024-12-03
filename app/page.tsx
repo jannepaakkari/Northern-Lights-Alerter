@@ -70,7 +70,7 @@ export default function Home() {
       </div>
       <div className="text-center max-w-xl flex justify-center gap-4">
         <Button color="primary" onClick={() => { setSubscribe(true); setIsInProcessing(true); }}>Subscribe</Button>
-        <Button color="secondary" onClick={() => { setSubscribe(false); setIsInProcessing(true); }}>Unsubscribe</Button>
+        <Button color="secondary" onClick={() => { setSubscribe(false); setIsInProcessing(true); setSelectedStation(null) }}>Unsubscribe</Button>
       </div>
 
       {isInProcessing && (

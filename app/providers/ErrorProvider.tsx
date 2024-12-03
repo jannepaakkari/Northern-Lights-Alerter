@@ -22,10 +22,8 @@ export const ErrorProvider: FC<ErrorProviderProps> = ({ children }) => {
 
     return (
         <ErrorContext.Provider value={{ setError }}>
-            <div>
-                {error && <ErrorMessage message={error} />}
-                {children}
-            </div>
+            {error && <ErrorMessage message={error} />}
+            {children}
         </ErrorContext.Provider>
     );
 };
