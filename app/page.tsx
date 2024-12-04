@@ -18,9 +18,9 @@ export default function Home() {
   const [selectedStation, setSelectedStation] = useState<string | null>(null);
   const [subscribe, setSubscribe] = useState<boolean>(true);
   const [isInProcessing, setIsInProcessing] = useState<boolean>(false);
-  const [{ isLoading: isLoadingSubscribe, error: subscribeError }, subscribeRequest] = usePost<SubscribeResponse>('/api/subscribe');
+  const [{ isLoading: isLoadingSubscribe }, subscribeRequest] = usePost<SubscribeResponse>('/api/subscribe');
   const [, unsubscribeRequest] = usePost<UnsubscribeResponse>('/api/unsubscribe');
-  const [{ data: weatherData, isLoading: isWeatherLoading, error: weatherError }] = useGet<WeatherResponse>('/api/weather', true);
+  const [{ data: weatherData, isLoading: isWeatherLoading }] = useGet<WeatherResponse>('/api/weather', true);
   const { setError } = useError();
   const { setSuccess } = useSuccess();
 

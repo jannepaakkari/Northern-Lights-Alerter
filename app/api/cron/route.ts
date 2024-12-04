@@ -1,9 +1,10 @@
 import nodemailer from 'nodemailer';
 import { NextRequest, NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
-import { filterStationsByRIndex } from '../utils/filterStationsByRIndex';
+import { filterStationsByRIndex } from '../../utils/filterStationsByRIndex';
 
 export async function POST(req: NextRequest, res: NextResponse) {
+
     if (req.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
