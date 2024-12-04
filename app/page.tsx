@@ -92,7 +92,7 @@ export default function Home() {
 
           <Input
             fullWidth
-            placeholder="Enter your email address"
+            placeholder="Email address"
             className="bg-white text-black"
             type="email"
             value={email}
