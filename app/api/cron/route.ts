@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export default async function GET(req: NextRequest) {
+export async function GET(req: NextRequest, res: NextResponse) {
     const cronJobUrl = `${process.env.BASE_URL}/api/email`;
-
 
     const response = await fetch(cronJobUrl, {
         method: 'POST',
