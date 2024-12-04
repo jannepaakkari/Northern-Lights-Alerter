@@ -14,6 +14,7 @@ Northern Lights Alerter is an application that displays the current status of th
 - External API integrations
 - Nodemailer (Gmail integration)
 - MongoDB
+- Vercel (deployment)
 
 ## How to Use
 
