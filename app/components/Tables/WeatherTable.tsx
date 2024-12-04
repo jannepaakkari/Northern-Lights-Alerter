@@ -1,5 +1,6 @@
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/react";
 import { WeatherData } from '../../interfaces/weather';
+import { formatTime } from "@/app/utils/fromatTime";
 
 const WeatherTable = ({ data }: { data: WeatherData }) => {
     const columns = ['Station Key', 'Time', 'R-index', 'Probability of auroras', 'Station'];
@@ -15,7 +16,7 @@ const WeatherTable = ({ data }: { data: WeatherData }) => {
                 {Object.entries(data).map(([stationKey, stationData]) => (
                     <TableRow key={stationKey}>
                         <TableCell>{stationKey}</TableCell>
-                        <TableCell>{stationData['Time']}</TableCell>
+                        <TableCell>{formatTime(stationData['Time'])}</TableCell>
                         <TableCell>{stationData['R-index']}</TableCell>
                         <TableCell>{stationData['Probability of auroras']}</TableCell>
                         <TableCell>{stationData['Station']}</TableCell>
