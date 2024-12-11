@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import clientPromise from '../../../lib/mongodb';
+import allowedStations from '@/app/config/allowedStations';
 
 interface RequestBody {
     email: string;
@@ -10,10 +11,10 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const { email, selectedStation }: RequestBody = await req.json();
 
     // Validate email and selectedStation
-    if (!email || !email.includes('@')) {
+    if (!email || !email.includes('@') || email.length > 200) {
         return NextResponse.json({ message: 'Invalid email' }, { status: 400 });
     }
-    if (!selectedStation) {
+    if (!selectedStation && !allowedStations.includes(selectedStation)) {
         return NextResponse.json({ message: 'Selected station is required' }, { status: 400 });
     }
 
@@ -44,7 +45,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
                 email,
                 timestamp: new Date(),
             });
-            return NextResponse.json({ message: 'User subscribed successfully', result });
+            return NextResponse.json({ message: 'User subscribed successfully', result }, { status: 200 });
         }
     } catch (error) {
         return NextResponse.json({ message: 'Error processing the request', error }, { status: 500 });

@@ -10,11 +10,11 @@ import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
 import { siteConfig } from "@/config/site";
-import { ThemeSwitch } from "@/components/theme-switch";
+import { ThemeSwitch } from "@/app/components/Theme/theme-switch";
 import {
   GithubIcon,
   Logo,
-} from "@/components/icons";
+} from "@/app/components/Icons/icons";
 
 export const Navbar = () => {
   return (
