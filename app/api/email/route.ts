@@ -72,7 +72,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
                     { $set: { sentAt: new Date() } }
                 );
             }
-            return NextResponse.json({ message: 'Emails sent successfully!' });
+            return NextResponse.json({ message: 'Emails sent successfully!' }, { status: 200 });
         }
         else {
             return NextResponse.json({ error: 'Not right conditions' }, { status: 200 });

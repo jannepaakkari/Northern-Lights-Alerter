@@ -1,62 +1,53 @@
 'use client'
+import { useState, useEffect, useRef } from "react";
+import { Input, Button, Select, SelectItem } from "@nextui-org/react";
 import usePost from '../../hooks/usePost';
 import useGet from '../../hooks/useGet';
-import { Input } from "@nextui-org/input";
-import { Button } from "@nextui-org/button";
-import { useState } from "react";
-import { SubscribeResponse } from '../../interfaces/subscribe';
-import { UnsubscribeResponse } from '../../interfaces/unsubscribe';
-import { WeatherResponse, WeatherData } from '../../interfaces/weather';
-import { Select, SelectItem } from "@nextui-org/react";
 import { useError } from "../../hooks/useError";
 import { useSuccess } from "../../hooks/useSuccess";
-import allowedStations from '@/app/config/allowedStations';
+import { SubscribeResponse } from '../../interfaces/subscribeResponse';
+import { UnsubscribeResponse } from '../../interfaces/unsubscribeResponse';
+import { WeatherResponse, WeatherData } from '../../interfaces/weatherResponse';
+import { handleDataChange } from "@/app/utils/handleDataChange";
 
 export default function Subscribe() {
     const [email, setEmail] = useState<string>("");
     const [selectedStation, setSelectedStation] = useState<string | null>(null);
     const [subscribe, setSubscribe] = useState<boolean>(true);
     const [isInProcessing, setIsInProcessing] = useState<boolean>(false);
-    const [{ isLoading: isLoadingSubscribe }, subscribeRequest] = usePost<SubscribeResponse>('/api/subscribe');
-    const [, unsubscribeRequest] = usePost<UnsubscribeResponse>('/api/unsubscribe');
+    const [{ data: subscribeData, isLoading: isLoadingSubscribe }, subscribeRequest] = usePost<SubscribeResponse>('/api/subscribe');
+    const [{ data: unsubscribeData }, unsubscribeRequest] = usePost<UnsubscribeResponse>('/api/unsubscribe');
     const [{ data: weatherData, isLoading: isWeatherLoading }] = useGet<WeatherResponse>('/api/weather', true);
+    const prevSubscribeData = useRef(subscribeData);
+    const prevUnsubscribeData = useRef(unsubscribeData);
     const { setError } = useError();
     const { setSuccess } = useSuccess();
 
+    useEffect(() => {
+        const prevData = {
+            subscribeData: prevSubscribeData.current,
+            unsubscribeData: prevUnsubscribeData.current
+        };
+
+        handleDataChange(subscribeData, prevData.subscribeData, setSuccess, setError);
+        handleDataChange(unsubscribeData, prevData.unsubscribeData, setSuccess, setError);
+
+        prevSubscribeData.current = subscribeData;
+        prevUnsubscribeData.current = unsubscribeData;
+    }, [subscribeData, unsubscribeData]);
+
     const handleSubscribe = async () => {
-        if (!selectedStation) {
-            setError('Error: Please select a station key.');
-            return;
-        }
-        // TODO: This really should not ever happen, if it does could be good idea to log (=notify) about it. 
-        if (!allowedStations.includes(selectedStation)) {
-            setError('Error: Invalid station key.');
-            return;
-        }
-        if (!email || !email.includes("@")) {
-            setError('Error: Please enter a valid email address.');
-            return;
-        }
-        if (email.length > 200) {
-            setError('Error: Email address is too long.');
-            return;
-        }
         try {
             await subscribeRequest({ email, selectedStation });
-            setSuccess('Successfully subscribed!');
+
         } catch (error) {
             setError(typeof error === 'string' ? error : 'Error: Something went wrong.');
         }
     };
 
     const handleUnsubscribe = async () => {
-        if (!email || !email.includes("@") || email.length > 200) {
-            setError('Error: Please enter a valid email address.');
-            return;
-        }
         try {
             await unsubscribeRequest({ email });
-            setSuccess('Successfully unsubscribed!');
         } catch (error) {
             setError(typeof error === 'string' ? error : 'Error: Something went wrong.');
         }
@@ -66,7 +57,9 @@ export default function Subscribe() {
         ? weatherData.data as WeatherData
         : null;
 
-    const weatherDataKeys = parsedWeatherData && Object.keys(parsedWeatherData);
+    const stationData = parsedWeatherData
+        ? Object.values(parsedWeatherData).map(item => item?.Station)
+        : [];
 
     return (
         <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
@@ -85,12 +78,12 @@ export default function Subscribe() {
                 <div className="flex flex-col md:flex-row items-center gap-4 w-full max-w-md">
                     {subscribe === true && (
                         <Select
-                            label="Select a station key"
-                            placeholder="Key"
+                            label="Select a station"
+                            placeholder="Station"
                             className="max-w-xs"
                             onChange={(e) => setSelectedStation(e.target.value)}
                         >
-                            {weatherDataKeys ? weatherDataKeys.map((data) => (
+                            {stationData ? stationData.map((data) => (
                                 <SelectItem key={data}>
                                     {data}
                                 </SelectItem>

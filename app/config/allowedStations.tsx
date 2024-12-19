@@ -1,3 +1,3 @@
-const allowedStations: string[] = ['KEV', 'KIL', 'IVA', 'MUO', 'PEL', 'RAN', 'OUJ', 'MEK', 'HAN', 'NUR', 'TAR'];
+const allowedStations: string[] = ['Kevo', 'Kilpisjärvi', 'Ivalo', 'Muonio', 'Pello', 'Ranua', 'Oulujärvi', 'Mekrijärvi', 'Hankasalmi', 'Nurmijärvi', 'Tartu'];
 
 export default allowedStations;

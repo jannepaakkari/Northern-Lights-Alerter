@@ -17,8 +17,11 @@ const usePost = <T>(url: string) => {
                 body: JSON.stringify(body),
             });
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+            // Handle 400 status code separately to show the error to the user.
+            if (response.status === 400) {
+                const errorResult = await response.json();
+                setData(errorResult);
+                return;
             }
 
             const result: T = await response.json();

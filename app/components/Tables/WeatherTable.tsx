@@ -1,9 +1,9 @@
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/react";
-import { WeatherData } from '../../interfaces/weather';
+import { WeatherData } from '../../interfaces/weatherResponse';
 import { formatTime } from "@/app/utils/fromatTime";
 
 const WeatherTable = ({ data }: { data: WeatherData }) => {
-    const columns = ['Station Key', 'Time', 'R-index', 'Probability of auroras', 'Station'];
+    const columns = ['Time (dd.mm.yyyy hh:mm)', 'R-index', 'Probability of auroras', 'Station'];
 
     return (
         <Table aria-label="Space Weather Table">
@@ -15,7 +15,6 @@ const WeatherTable = ({ data }: { data: WeatherData }) => {
             <TableBody>
                 {Object.entries(data).map(([stationKey, stationData]) => (
                     <TableRow key={stationKey}>
-                        <TableCell>{stationKey}</TableCell>
                         <TableCell>{formatTime(stationData['Time'])}</TableCell>
                         <TableCell>{stationData['R-index']}</TableCell>
                         <TableCell>{stationData['Probability of auroras']}</TableCell>

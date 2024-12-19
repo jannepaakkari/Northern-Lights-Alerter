@@ -1,6 +1,6 @@
 'use client'
 import useGet from './hooks/useGet';
-import { WeatherResponse, WeatherData } from './interfaces/weather';
+import { WeatherResponse, WeatherData } from './interfaces/weatherResponse';
 import { CircularProgress } from "@nextui-org/react";
 import WeatherTable from './components/Tables/WeatherTable';
 import Subscribe from './components/Subscribe/subscribe';

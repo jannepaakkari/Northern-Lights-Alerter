@@ -18,7 +18,6 @@ Northern Lights Alerter is an application that displays the current status of th
 - TypeScript
 - NextUI v2
 - Tailwind CSS
-- Next-themes
 - GitHub Actions
 - External API integrations
 - Nodemailer (Gmail integration)
@@ -50,11 +49,7 @@ Configure the following environment variables either in a `.env.local` file or i
 npm run dev
 ```
 
-## Screenshot
-![Screenshot showing the app with no action taken](images/App0.png)
-![Screenshot showing the app after the subscribe button is clicked](images/App1.png)
-![Screenshot showing the app after the unsubscribe button is clicked](images/App2.png)
-
-## License
-
-This project is licensed under the [MIT license](https://github.com/nextui-org/next-app-template/blob/main/LICENSE).
+## Screenshots
+![Screenshot showing the app with no action taken](screenshots/nl0.png)
+![Screenshot showing the app after the subscribe button is clicked](screenshots/nl1.png)
+![Screenshot showing the app after the unsubscribe button is clicked](screenshots/nl2.png)

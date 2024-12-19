@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import clientPromise from '../../../lib/mongodb';
 import allowedStations from '@/app/config/allowedStations';
+import { validateEmail } from '@/app/utils/validateEmail';
 
 interface RequestBody {
     email: string;
@@ -11,11 +12,11 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const { email, selectedStation }: RequestBody = await req.json();
 
     // Validate email and selectedStation
-    if (!email || !email.includes('@') || email.length > 200) {
-        return NextResponse.json({ message: 'Invalid email' }, { status: 400 });
+    if (!email || !validateEmail(email)) {
+        return NextResponse.json({ message: 'Invalid email', result: "error" }, { status: 400 });
     }
     if (!selectedStation && !allowedStations.includes(selectedStation)) {
-        return NextResponse.json({ message: 'Selected station is required' }, { status: 400 });
+        return NextResponse.json({ message: 'Selected station is required', result: "error" }, { status: 400 });
     }
 
     try {
@@ -28,7 +29,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
         if (existingEntry) {
             // If the email exists, update the selectedStation and timestamp
-            const result = await collection.updateOne(
+            await collection.updateOne(
                 { email },
                 {
                     $set: {
@@ -37,17 +38,17 @@ export async function POST(req: NextRequest, res: NextResponse) {
                     },
                 }
             );
-            return NextResponse.json({ message: 'User subscription updated', result });
+            return NextResponse.json({ message: 'User subscribed successfully', result: "ok" }, { status: 200 });
         } else {
             // If the email doesn't exist, insert a new entry
-            const result = await collection.insertOne({
+            await collection.insertOne({
                 selectedStation,
                 email,
                 timestamp: new Date(),
             });
-            return NextResponse.json({ message: 'User subscribed successfully', result }, { status: 200 });
+            return NextResponse.json({ message: 'User subscribed successfully', result: "ok" }, { status: 200 });
         }
     } catch (error) {
-        return NextResponse.json({ message: 'Error processing the request', error }, { status: 500 });
+        return NextResponse.json({ message: 'Error processing the request', result: "error" }, { status: 500 });
     }
 }
