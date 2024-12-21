@@ -53,7 +53,7 @@ export default function Subscribe() {
                 </p>
             </div>
             <div className="text-center max-w-xl flex justify-center gap-4">
-                <Button color="primary" onClick={() => { setSubscribe(!subscribe); }}>Subscribe</Button>
+                <Button color={subscribe ? undefined : "primary"} onClick={() => { setSubscribe(!subscribe); }}>Subscribe</Button>
             </div>
 
             {subscribe && (
