@@ -8,6 +8,9 @@ export const siteConfig = {
       label: "Home",
       href: "/",
     },
+    {
+      href: "/unsubscribe",
+    },
   ],
   navMenuItems: [
   ],

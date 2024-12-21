@@ -20,6 +20,9 @@ export async function POST(req: NextRequest, res: NextResponse) {
         }
 
         const data = await response.json();
+
+        // TODO: let users choose the R index threshold
+        // Check in which stations R index is high enough to send an email
         const filteredStations = filterStationsByRIndex(data.data);
 
         if (filteredStations?.length > 0) {
@@ -32,6 +35,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
                 // Check if the users selectedStation is in filteredStations (is opted in for spesific station)
                 const isStationMatch = filteredStations.includes(item.selectedStation);
 
+                // TODO: Let users choose how often they want to receive emails.
                 // If 'sentAt' exists and is more than 12 hours ago, exclude this email to avoid spam
                 if (item.sentAt) {
                     const sentTime = new Date(item.sentAt);
@@ -47,6 +51,9 @@ export async function POST(req: NextRequest, res: NextResponse) {
             }).map((item) => item.email);
 
             for (const email of emailList) {
+                const existingEntry = await collection.findOne({ email });
+                const userHash = existingEntry?.hash
+
                 // Set up the transporter for sending email via Gmail
                 const transporter = nodemailer.createTransport({
                     host: 'smtp.gmail.com',
@@ -63,7 +70,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
                     from: `"Northern Lights Alert" <${process.env.EMAIL_USER}>`,
                     to: `${email}`,
                     subject: 'Northern Lights Alert!',
-                    text: 'Conditions are perfect for viewing the northern lights! You can unsubscribe at any time by visiting the website.',
+                    text: `Conditions are perfect for viewing the northern lights! You can unsubscribe at any time by visiting the following link: ${process.env.NEXT_PUBLIC_BASE_URL}/api/unsubscribe?hash=${userHash}`,
                 });
 
                 // Update the sentAt timestamp for the user

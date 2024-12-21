@@ -3,7 +3,7 @@ import { WeatherData } from '../../interfaces/weatherResponse';
 import { formatTime } from "@/app/utils/fromatTime";
 
 const WeatherTable = ({ data }: { data: WeatherData }) => {
-    const columns = ['Time (dd.mm.yyyy hh:mm)', 'R-index', 'Probability of auroras', 'Station'];
+    const columns = ['Time (dd.mm.yyyy)', 'R-index', 'Probability of auroras', 'Station'];
 
     return (
         <Table aria-label="Space Weather Table">

@@ -1,12 +1,15 @@
 export function filterStationsByRIndex(
-    data: { [key: string]: { 'R-index': string } },
-    threshold: number = 7
+    data: { [key: string]: { 'R-index': string; Station: string } },
+    threshold: number = 75
 ): string[] {
     const stationsWithHighRIndex: string[] = [];
+
     for (const key in data) {
-        if (Number(data[key]['R-index']) > threshold) {
-            stationsWithHighRIndex.push(key);
+        const entry = data[key];
+        if (Number(entry['R-index']) > threshold) {
+            stationsWithHighRIndex.push(entry.Station);
         }
     }
+
     return stationsWithHighRIndex;
 }

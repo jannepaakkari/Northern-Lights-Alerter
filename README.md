@@ -4,7 +4,7 @@ Northern Lights Alerter is an application that displays the current status of th
 
 ### Notification Flow
 
-1. Users have the ability to subscribe and unsubscribe at any time.
+1. Users have the ability to unsubscribe via an email link (users are identified via a unique hash).
 2. A CRON job runs daily at 18:00*. If the conditions for northern lights visibility are met, an email notification is sent to subscribers. Each email address can receive notifications once every 12 hours.
 3. A table displaying the current status of the northern lights is available on the front page and does not require a subscription.
 
@@ -50,6 +50,5 @@ npm run dev
 ```
 
 ## Screenshots
-![Screenshot showing the app with no action taken](screenshots/nl0.png)
-![Screenshot showing the app after the subscribe button is clicked](screenshots/nl1.png)
-![Screenshot showing the app after the unsubscribe button is clicked](screenshots/nl2.png)
+![Screenshot showing the app with no action taken](screenshots/nl00.png)
+![Screenshot showing the app after the subscribe button is clicked](screenshots/nl01.png)

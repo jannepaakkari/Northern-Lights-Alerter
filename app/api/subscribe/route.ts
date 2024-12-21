@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import clientPromise from '../../../lib/mongodb';
 import allowedStations from '@/app/config/allowedStations';
 import { validateEmail } from '@/app/utils/validateEmail';
+import { generateRandomHash } from '@/app/utils/generateRandomhash';
 
 interface RequestBody {
     email: string;
@@ -34,16 +35,18 @@ export async function POST(req: NextRequest, res: NextResponse) {
                 {
                     $set: {
                         selectedStation,
+                        hash: generateRandomHash(),
                         timestamp: new Date(),
                     },
                 }
             );
             return NextResponse.json({ message: 'User subscribed successfully', result: "ok" }, { status: 200 });
         } else {
-            // If the email doesn't exist, insert a new entry
+            // New entry if the email does not exist
             await collection.insertOne({
                 selectedStation,
                 email,
+                hash: generateRandomHash(),
                 timestamp: new Date(),
             });
             return NextResponse.json({ message: 'User subscribed successfully', result: "ok" }, { status: 200 });
