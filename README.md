@@ -2,9 +2,9 @@
 
 Northern Lights Alerter is an application that displays the current status of the northern lights (aurora borealis) in Finland using an external Finnish API. Users can subscribe and unsubscribe to alerts, receiving email notifications when the northern lights are visible. The application has been tested in production and is fully functional.
 
-### Notification Flow
+### General Flow
 
-1. Users have the ability to unsubscribe via an email link (users are identified via a unique hash).
+1. Users can subscribe at any time and unsubscribe via an email link upon receiving a notification. Users are identified by a unique hash.
 2. A CRON job runs daily at 18:00*. If the conditions for northern lights visibility are met, an email notification is sent to subscribers. Each email address can receive notifications once every 12 hours.
 3. A table displaying the current status of the northern lights is available on the front page and does not require a subscription.
 
